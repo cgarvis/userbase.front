@@ -10,17 +10,24 @@ module.exports = (grunt) ->
       coffee:
         files: ['app/{,*/}*.coffee']
         task: ['newer:coffee:dist']
+      grunt:
+        files: ['Gruntfile.coffee']
+        tasks: []
       livereload:
         options:
           livereload: '<%= connect.options.livereload %>'
         files: [
-          'app/*.html'
+          'pages/*.html'
           '.tmp/*.js'
+          '.tmp/*.css'
         ]
-
+      styles:
+        files: ['styles/{,*/}*.less']
+        task: ['less']
 
     coffee:
       options:
+        bare: true
         sourceMaps: true
         sourceRoot: ''
       dist:
@@ -28,7 +35,7 @@ module.exports = (grunt) ->
           expand: true
           cwd: 'app'
           src: '{,*/}*.coffee'
-          dist: '.tmp'
+          dest: '.tmp'
           ext: '.js'
         ]
 
@@ -42,11 +49,19 @@ module.exports = (grunt) ->
           open: true
           base:[
             '.tmp'
+            'pages'
             'app'
           ]
 
+    less:
+      dist:
+        files:
+          '.tmp/userbase.front.css': 'styles/userbase.front.less'
+
   grunt.registerTask 'serve', ->
     grunt.task.run [
+      'coffee:dist'
+      'less:dist'
       'connect:livereload'
       'watch'
     ]
