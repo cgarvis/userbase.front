@@ -9,10 +9,13 @@ module.exports = (grunt) ->
     watch:
       coffee:
         files: ['app/{,*/}*.coffee']
-        task: ['newer:coffee:dist']
+        tasks: ['coffee:dist']
       grunt:
         files: ['Gruntfile.coffee']
         tasks: []
+      javascript:
+        files: ['.tmp/*.js', '!.tmp/userbase.min.js']
+        tasks: ['uglify:dist']
       livereload:
         options:
           livereload: '<%= connect.options.livereload %>'
@@ -28,8 +31,6 @@ module.exports = (grunt) ->
     coffee:
       options:
         bare: true
-        sourceMaps: true
-        sourceRoot: ''
       dist:
         files: [
           expand: true
@@ -58,10 +59,24 @@ module.exports = (grunt) ->
         files:
           '.tmp/userbase.front.css': 'styles/userbase.front.less'
 
+    uglify:
+      dist:
+        options:
+          beautify: true
+          mangle: false
+        files:
+          '.tmp/userbase.min.js': [
+            'bower_components/angular-segmentio/angular-segmentio.js'
+            '.tmp/{,*/}*.js'
+            '!.tmp/userbase.min.js'
+          ]
+
+
   grunt.registerTask 'serve', ->
     grunt.task.run [
       'coffee:dist'
       'less:dist'
+      'uglify:dist'
       'connect:livereload'
       'watch'
     ]
