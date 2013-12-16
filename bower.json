@@ -1,0 +1,9 @@
+{
+  "name": "userbase.front",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "angular": "~1.2.0",
+    "angular-segmentio": "707719183aa4b25399b7f3830a236115c1b30afa"
+  }
+}
